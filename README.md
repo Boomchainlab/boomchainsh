@@ -62,7 +62,7 @@ jobs:
 📜 .secrets.env.example
 ETH_RPC_URL=
 WALLET_ADDRESS=
-CHONK9K_PRIVATE_KEY=
+CHONK9K_EVM_PRIVATE_KEY=
 
 
 🚢 Manual Push Instructions
