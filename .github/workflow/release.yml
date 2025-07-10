@@ -1,0 +1,48 @@
+name: 📦 Build & Release BoomchainSH
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # e.g., v0.5.0
+
+jobs:
+  build-and-release:
+    name: 🔧 Build Plugin Archive & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛒 Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: 🧱 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 🧹 Clean Archive Dir
+        run: |
+          mkdir -p archive
+          rm -f archive/boomchainsh-plugins.tar.gz
+
+      - name: 📦 Create Plugin Archive
+        run: |
+          tar -czvf archive/boomchainsh-plugins.tar.gz -C plugins .
+
+      - name: 📤 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: boomchainsh-plugins
+          path: archive/boomchainsh-plugins.tar.gz
+
+      - name: 🚀 Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: BoomchainSH ${{ github.ref_name }}
+          body: |
+            🔗 BoomchainSH v${{ github.ref_name }} published.
+            Includes latest plugin bundle and CLI core.
+          files: |
+            boomchainsh.py
+            archive/boomchainsh-plugins.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
